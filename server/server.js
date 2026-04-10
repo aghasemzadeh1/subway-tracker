@@ -66,7 +66,7 @@ app.get('/api/trains', async (req, res) => {
 // Serve built React app in production
 const clientBuild = path.join(__dirname, '../client/build');
 app.use(express.static(clientBuild));
-app.get('*', (req, res) => res.sendFile(path.join(clientBuild, 'index.html')));
+app.get('/{*path}', (req, res) => res.sendFile(path.join(clientBuild, 'index.html')));
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
