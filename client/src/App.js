@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Tooltip, Polyline, CircleMarker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Tooltip, Polyline, CircleMarker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -182,12 +182,12 @@ const CSS = `
 
   /* ── Mobile ────────────────────────────────────────────────────────────── */
   @media (max-width:768px){
-    body{overflow:auto}
-    .app{grid-template-columns:1fr;grid-template-rows:48px 1fr auto;height:100dvh}
+    body{overflow:hidden}
+    .app{grid-template-columns:1fr;grid-template-rows:48px 1fr auto;height:100dvh;height:100vh}
     .hdr{padding:0 14px}
     .hdr-title{font-size:11px}
-    .map-wrap{min-height:0}
-    .side{border-left:none;border-top:2px solid #1a1a2e;flex-direction:column;max-height:42vh;overflow-y:auto}
+    .map-wrap{min-height:0;height:100%}
+    .side{border-left:none;border-top:2px solid #1a1a2e;flex-direction:column;height:38vh;max-height:38vh;overflow-y:auto}
     .sec{padding:10px 12px}
     .sg{gap:5px}
     .sv{font-size:17px}
@@ -196,6 +196,20 @@ const CSS = `
     .feed{display:none}
   }
 `;
+
+// ── Tells Leaflet to recalculate its size whenever the container resizes ───
+function MapResizer() {
+  const map = useMap();
+  useEffect(() => {
+    // Initial invalidation after first paint
+    const t = setTimeout(() => map.invalidateSize(), 100);
+    // Re-invalidate on any window resize (orientation change, desktop resize)
+    const onResize = () => map.invalidateSize();
+    window.addEventListener('resize', onResize);
+    return () => { clearTimeout(t); window.removeEventListener('resize', onResize); };
+  }, [map]);
+  return null;
+}
 
 // ── App ────────────────────────────────────────────────────────────────────
 export default function App() {
@@ -305,6 +319,7 @@ export default function App() {
 
         <main className="map-wrap">
           <MapContainer center={[40.72, -73.99]} zoom={12} style={{width:'100%',height:'100%'}} zoomControl={true}>
+            <MapResizer />
             <TileLayer
               url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
