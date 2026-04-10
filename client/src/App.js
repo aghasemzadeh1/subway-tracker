@@ -179,6 +179,22 @@ const CSS = `
   .tip-detail{font-size:10px;color:#999;font-family:'DM Mono',monospace;line-height:1.7}
   .rbar{position:absolute;bottom:0;left:0;height:3px;background:#1a1a2e;
     transition:width .4s linear;z-index:1000;opacity:0.4}
+
+  /* ── Mobile ────────────────────────────────────────────────────────────── */
+  @media (max-width:768px){
+    body{overflow:auto}
+    .app{grid-template-columns:1fr;grid-template-rows:48px 1fr auto;height:100dvh}
+    .hdr{padding:0 14px}
+    .hdr-title{font-size:11px}
+    .map-wrap{min-height:0}
+    .side{border-left:none;border-top:2px solid #1a1a2e;flex-direction:column;max-height:42vh;overflow-y:auto}
+    .sec{padding:10px 12px}
+    .sg{gap:5px}
+    .sv{font-size:17px}
+    .lp{width:30px;height:30px;font-size:11px}
+    .flbl{display:none}
+    .feed{display:none}
+  }
 `;
 
 // ── App ────────────────────────────────────────────────────────────────────
